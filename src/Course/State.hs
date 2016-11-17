@@ -32,21 +32,32 @@ newtype State s a =
   }
 
 -- | Implement the `Functor` instance for `State s`.
+<<<<<<< HEAD
 -- >>> runState ((+1) <$> pure 0) 0
 -- (1,0)
 --
 -- >>> runState ((+1) <$> State (\s -> (9,s * 2))) 3
 -- (10, 6)
+=======
+--
+-- >>> runState ((+1) <$> State (\s -> (9, s * 2))) 3
+-- (10,6)
+>>>>>>> c98da3ceb3fb9251a35b8a23a050df6a4fb73a95
 instance Functor (State s) where
   (<$>) ::
     (a -> b)
     -> State s a
     -> State s b
+<<<<<<< HEAD
   (<$>) f (State run) =
     State (\st ->
       let (a,s) = run st
       in (f a, s)
     )
+=======
+  (<$>) =
+    error "todo: Course.State#(<$>)"
+>>>>>>> c98da3ceb3fb9251a35b8a23a050df6a4fb73a95
 
 -- | Implement the `Applicative` instance for `State s`.
 --
