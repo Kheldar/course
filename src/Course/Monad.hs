@@ -6,8 +6,9 @@
 module Course.Monad(
   Monad(..)
 , join
-, (>>=)  
+, (>>=)
 , (<=<)
+, (>=>)
 ) where
 
 import Course.Applicative hiding ((<*>))
@@ -114,12 +115,10 @@ instance Monad Optional where
 -- >>> ((*) =<< (+10)) 7
 -- 119
 instance Monad ((->) t) where
-  (=<<) ::
-    (a -> ((->) t b))
-    -> ((->) t a)
-    -> ((->) t b)
-  (=<<) =
-    error "todo: Course.Monad (=<<)#instance ((->) t)"
+  (=<<) :: (a -> t -> b)
+    -> (t -> a)
+    -> t -> b
+  (=<<) f = (<*>) (flip f)
 
 -- | Flattens a combined structure to a single structure.
 --
@@ -152,8 +151,7 @@ join =
   f a
   -> (a -> f b)
   -> f b
-(>>=) =
-  error "todo: Course.Monad#(>>=)"
+(>>=) = flip (=<<)
 
 infixl 1 >>=
 
@@ -168,10 +166,19 @@ infixl 1 >>=
   -> (a -> f b)
   -> a
   -> f c
-(<=<) =
-  error "todo: Course.Monad#(<=<)"
+(<=<) g f x = f x >>= g
 
 infixr 1 <=<
+
+(>=>) ::
+  Monad f =>
+  (a -> f b)
+  -> (b -> f c)
+  -> a
+  -> f c
+(>=>) = flip (<=<)
+
+infixr 1 >=>
 
 -----------------------
 -- SUPPORT LIBRARIES --
